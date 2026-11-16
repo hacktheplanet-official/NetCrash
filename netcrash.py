@@ -7,10 +7,13 @@ A fast, threaded TCP port scanner for authorized testing only.
 Scan only systems you own or have explicit permission to test.
 
 Usage:
-    python3 netcrash.py <target>
-    python3 netcrash.py <target> --full
-    python3 netcrash.py <target> --ports 80,443,8000-8100
-    python3 netcrash.py --help
+    netcrash example.com
+    netcrash <target> --full
+    netcrash <target> --ports 80,443,8000-8100
+    netcrash --help
+
+Install it once so the short command works (see install.sh):
+    sudo cp netcrash.py /usr/local/bin/netcrash
 
 No external dependencies. Python 3.8+ only.
 """
@@ -76,6 +79,11 @@ def print_banner():
 def print_warning():
     print("Only scan systems you own or have permission to test.")
     print()
+
+
+def print_short_usage():
+    print("Usage: netcrash example.com")
+    print("For all options: netcrash --help")
 
 
 # ---------------------------------------------------------------------------
@@ -273,11 +281,11 @@ def build_parser():
         description="NetCrash V1.0 - Fast threaded TCP port scanner. "
                     "Scan only systems you own or have permission to test.",
         epilog="Examples:\n"
-               "  python3 netcrash.py 192.168.1.1\n"
-               "  python3 netcrash.py example.com --full\n"
-               "  python3 netcrash.py 192.168.1.1 --ports 80,443,8000-8100\n"
-               "  python3 netcrash.py example.com --top1000 --output report.json\n"
-               "  python3 netcrash.py 192.168.1.1 --threads 200 --timeout 1.0",
+               "  netcrash 192.168.1.1\n"
+               "  netcrash example.com --full\n"
+               "  netcrash 192.168.1.1 --ports 80,443,8000-8100\n"
+               "  netcrash example.com --top1000 --output report.json\n"
+               "  netcrash 192.168.1.1 --threads 200 --timeout 1.0",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("target", nargs="?", help="Target IP address or domain name")
@@ -322,7 +330,8 @@ def main(argv=None):
         USE_COLOR = False
 
     if not args.target:
-        parser.print_help()
+        print_banner()
+        print_short_usage()
         return 2
 
     # Choose port set - one mode only

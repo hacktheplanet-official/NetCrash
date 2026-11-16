@@ -36,7 +36,7 @@ NetCrash uses a thread pool (default 100 threads, up to 500). A full scan of all
 
 | Mode | Command | What it scans |
 |---|---|---|
-| Fast (default) | `python3 netcrash.py 192.168.1.1` | Top 100 most common ports |
+| Fast (default) | `netcrash 192.168.1.1` | Top 100 most common ports |
 | Top 1000 | `--top1000` | Top 1000 most common ports |
 | Full | `--full` | All ports, 1–65535 |
 | Custom | `--ports 80,443,8000-8100` | Only the ports you list, single ports and ranges |
@@ -79,10 +79,10 @@ The report includes the tool version, target, IP address, scan mode, date and ti
 
 ### Clean terminal output
 
-NetCrash prints a red block banner once at the start, one short ethical-use warning, then the scan. It does not print step-by-step instructions on every command. For usage instructions, run one command:
+NetCrash prints a red block banner once at the start, one short ethical-use warning, then the scan. It does not print step-by-step instructions on every command. Run it with no target and it shows the banner and the short usage line `netcrash example.com`. For full usage instructions, run one command:
 
 ```bash
-python3 netcrash.py --help
+netcrash --help
 ```
 
 ### No dependencies
@@ -114,13 +114,23 @@ git clone https://github.com/hacktheplanet-official/NetCrash.git
 cd NetCrash
 ```
 
-That is all. There is no setup script and no `pip install` step.
-
-Run it directly:
+Install the `netcrash` command (once):
 
 ```bash
-python3 netcrash.py --help
+chmod +x install.sh
+./install.sh
 ```
+
+That copies `netcrash.py` to `/usr/local/bin/netcrash`. There is no `pip install` step.
+
+Then run it like nmap:
+
+```bash
+netcrash --help
+netcrash example.com
+```
+
+Without installing, run it from the folder with `./netcrash.py example.com`.
 
 ---
 
@@ -129,19 +139,19 @@ python3 netcrash.py --help
 Scan a target with the default Fast scan (top 100 ports):
 
 ```bash
-python3 netcrash.py 192.168.1.1
+netcrash 192.168.1.1
 ```
 
 Scan a domain instead of an IP address (NetCrash resolves it first):
 
 ```bash
-python3 netcrash.py example.com
+netcrash example.com
 ```
 
 Scan everything and save a JSON report:
 
 ```bash
-python3 netcrash.py example.com --full --output report.json
+netcrash example.com --full --output report.json
 ```
 
 ---
@@ -153,8 +163,8 @@ python3 netcrash.py example.com --full --output report.json
 Top 100 most common ports. Best when you want a quick answer.
 
 ```bash
-python3 netcrash.py 192.168.1.1
-python3 netcrash.py 192.168.1.1 --fast
+netcrash 192.168.1.1
+netcrash 192.168.1.1 --fast
 ```
 
 ### 2. Top 1000 scan
@@ -162,7 +172,7 @@ python3 netcrash.py 192.168.1.1 --fast
 Top 1000 most common ports. A good middle ground between speed and coverage.
 
 ```bash
-python3 netcrash.py 192.168.1.1 --top1000
+netcrash 192.168.1.1 --top1000
 ```
 
 ### 3. Full scan
@@ -170,7 +180,7 @@ python3 netcrash.py 192.168.1.1 --top1000
 All ports from 1 to 65535. Use this when you do not want to miss an uncommon open port.
 
 ```bash
-python3 netcrash.py 192.168.1.1 --full
+netcrash 192.168.1.1 --full
 ```
 
 ### 4. Custom ports
@@ -178,9 +188,9 @@ python3 netcrash.py 192.168.1.1 --full
 Scan only the ports you care about. You can mix single ports and ranges, separated by commas.
 
 ```bash
-python3 netcrash.py 192.168.1.1 --ports 80,443
-python3 netcrash.py 192.168.1.1 --ports 8000-8100
-python3 netcrash.py 192.168.1.1 --ports 22,80,443,8000-8100,3306
+netcrash 192.168.1.1 --ports 80,443
+netcrash 192.168.1.1 --ports 8000-8100
+netcrash 192.168.1.1 --ports 22,80,443,8000-8100,3306
 ```
 
 ### 5. Control speed
@@ -188,8 +198,8 @@ python3 netcrash.py 192.168.1.1 --ports 22,80,443,8000-8100,3306
 More threads make the scan faster. A shorter timeout also makes it faster, but a timeout that is too short can miss slow services.
 
 ```bash
-python3 netcrash.py 192.168.1.1 --full --threads 200
-python3 netcrash.py 192.168.1.1 --full --threads 200 --timeout 1.0
+netcrash 192.168.1.1 --full --threads 200
+netcrash 192.168.1.1 --full --threads 200 --timeout 1.0
 ```
 
 - `--threads N` — default 100, allowed 1 to 500.
@@ -198,17 +208,17 @@ python3 netcrash.py 192.168.1.1 --full --threads 200 --timeout 1.0
 ### 6. Save a report
 
 ```bash
-python3 netcrash.py 192.168.1.1 --full --output report.txt
-python3 netcrash.py example.com --top1000 --output report.json
+netcrash 192.168.1.1 --full --output report.txt
+netcrash example.com --top1000 --output report.json
 ```
 
 ### 7. Other options
 
 ```bash
-python3 netcrash.py --help       # Show full usage and examples
-python3 netcrash.py --version    # Show the version: NetCrash V1.0
-python3 netcrash.py 192.168.1.1 --no-banner   # Skip banner grabbing
-python3 netcrash.py 192.168.1.1 --no-color    # Plain output, no red colour
+netcrash --help       # Show full usage and examples
+netcrash --version    # Show the version: NetCrash V1.0
+netcrash 192.168.1.1 --no-banner   # Skip banner grabbing
+netcrash 192.168.1.1 --no-color    # Plain output, no red colour
 ```
 
 Press `Ctrl+C` at any time to stop a scan. NetCrash prints the partial results found so far.
